@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sample ruby application'
+
+Resources:
+  ExampleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: lambda_test
+      Handler: parse_git_hook.lambda_handler
+      Runtime: ruby2.5
+      Policies:
+      Environment:
+
+Outputs:
+  ExampleFunction:
+    Description: Example Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - ExampleFunction
+      - Arn
