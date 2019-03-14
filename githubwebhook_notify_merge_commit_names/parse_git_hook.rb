@@ -6,7 +6,7 @@ require 'openssl'
 require 'rack'
 
 def lambda_handler(event:, context:)
-    return { statusCode: 200, body: 'invalid token' } unless verify_signature(event)
+    return { statusCode: 400, body: 'invalid token' } unless verify_signature(event)
     
     req = event['body']
     if req['action'] == 'labeled' &&
