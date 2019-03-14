@@ -15,16 +15,14 @@ def lambda_handler(event:, context:)
       begin
         commits_url = req['pull_request']['commits_url']
         commits = JSON.parse(Faraday.get(commits_url).body)
-        messages = commits.map do |commit|
-          commit['commit']['message']
+        messages = commits.select do |commit|
+          commit['commit']['message'].include?('Merge pull request ') 
+        end.map do |commit|
+          commit['commit']['message'].gsub('Merge pull request ', '') 
         end
+      
         notifier = Slack::Notifier.new ENV['SLACK_NOTIFY_URL']
-        attachments = {
-          author_name: "以下のリリースを開始します。",
-          text: messages.join('\n'),
-          color: "good",
-        }
-        notifier.post attachments: [attachments]
+        notifier.post text: messages.join("\n")
       rescue => exception
         puts exception.message
       end
