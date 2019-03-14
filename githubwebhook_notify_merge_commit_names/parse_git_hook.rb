@@ -2,9 +2,13 @@
 require 'json'
 require 'slack-notifier'
 require 'faraday'
+require 'openssl'
+require 'rack'
 
 def lambda_handler(event:, context:)
-    req = event['payload']
+    return { statusCode: 200, body: 'invalid token' } unless verify_signature(event)
+    
+    req = event['body']
     if req['action'] == 'labeled' &&
       req['pull_request']['labels'].any?{ |label| label['name'] == 'deploy' }
 
@@ -22,4 +26,10 @@ def lambda_handler(event:, context:)
     end
 
     { statusCode: 200, body: 'ok' }
+end
+
+
+def verify_signature(event)
+  signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), ENV['SECRET_TOKEN'], event['body'].to_json)
+  Rack::Utils.secure_compare(signature, event['headers']['X-Hub-Signature'])
 end
