@@ -18,11 +18,13 @@ def lambda_handler(event:, context:)
         messages = commits.select do |commit|
           commit['commit']['message'].include?('Merge pull request ') 
         end.map do |commit|
-          commit['commit']['message'].gsub('Merge pull request ', '') 
+          commit['commit']['message'].gsub('Merge pull request ', '').gsub("\n", ' ')
         end
-      
-        notifier = Slack::Notifier.new ENV['SLACK_NOTIFY_URL']
-        notifier.post text: messages.join("\n")
+        unless messages.empty?
+          messages.unshift("<!here>", "リリースを開始します。修正内容を確認してください。")
+          notifier = Slack::Notifier.new ENV['SLACK_NOTIFY_URL']
+          notifier.post text: messages.join("\n")
+        end
       rescue => exception
         puts exception.message
       end
