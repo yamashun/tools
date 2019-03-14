@@ -19,7 +19,12 @@ def lambda_handler(event:, context:)
           commit['commit']['message']
         end
         notifier = Slack::Notifier.new ENV['SLACK_NOTIFY_URL']
-        notifier.ping messages.join('\n')
+        attachments = {
+          author_name: "以下のリリースを開始します。",
+          text: messages.join('\n'),
+          color: "good",
+        }
+        notifier.post attachments: [attachments]
       rescue => exception
         puts exception.message
       end
