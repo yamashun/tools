@@ -5,7 +5,7 @@ require 'faraday'
 require 'openssl'
 require 'rack'
 
-# commit 12
+# commit 13
 def lambda_handler(event:, context:)
     return { statusCode: 400, body: 'invalid token' } unless verify_signature(event)
     
