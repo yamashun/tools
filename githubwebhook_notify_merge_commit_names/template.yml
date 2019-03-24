@@ -6,7 +6,7 @@ Resources:
   ExampleFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: lambda_test
+      FunctionName: notify_slack_test
       Handler: parse_git_hook.lambda_handler
       Runtime: ruby2.5
       Policies:
