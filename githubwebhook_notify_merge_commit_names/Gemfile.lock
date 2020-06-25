@@ -4,7 +4,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     multipart-post (2.0.0)
-    rack (2.0.6)
+    rack (2.1.4)
     slack-notifier (2.3.2)
 
 PLATFORMS
